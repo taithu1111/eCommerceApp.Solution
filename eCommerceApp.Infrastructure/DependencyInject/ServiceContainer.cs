@@ -5,7 +5,6 @@ using eCommerceApp.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
 namespace eCommerceApp.Infrastructure.DependencyInject
 {
     public static class ServiceContainer
@@ -14,14 +13,22 @@ namespace eCommerceApp.Infrastructure.DependencyInject
             (this IServiceCollection services, IConfiguration config)
         {
             string connectionString = "Default";
+
+            var serverVersion = new MySqlServerVersion(new Version(8, 0, 33));
+
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(config.GetConnectionString(connectionString),
-                sqlOptions =>
-                {
-                    sqlOptions.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName);
-                    sqlOptions.EnableRetryOnFailure();
-                }),
-                ServiceLifetime.Scoped);
+                options.UseMySql(
+                    config.GetConnectionString(connectionString),
+                    serverVersion,
+                    MySqlOptions =>
+                    {
+                        MySqlOptions.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName);
+                        MySqlOptions.EnableRetryOnFailure();
+                    }
+                ),
+                ServiceLifetime.Scoped
+            );
+
             services.AddScoped<IGeneric<Product>, GenericRepository<Product>>();
             services.AddScoped<IGeneric<Category>, GenericRepository<Category>>();
             return services;
