@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using eCommerceApp.Application.Services.Interfaces.Logging;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using MySql.Data.MySqlClient;
 
 namespace eCommerceApp.Infrastructure.Middleware
@@ -9,15 +11,18 @@ namespace eCommerceApp.Infrastructure.Middleware
         public async Task InvokeAsync(HttpContext context)
         {
             try
-            {
+            {   
                 await _next(context);
             }
             catch (DbUpdateException ex)
             {
+                var logger = context.RequestServices.GetRequiredService<IApplogger<ExceptionHandlingMiddleware>>();
                 MySqlException? innerException = ex.InnerException as MySqlException;
-                if(innerException != null)
+                context.Response.ContentType = "application/json";
+                if (innerException != null)
                 {
-                   switch(innerException.Number)
+                    logger.LogError(innerException, "MySqlException exception");
+                    switch (innerException.Number)
                     {
                         case 1062: // Duplicate entry
                             context.Response.StatusCode = StatusCodes.Status409Conflict;
@@ -43,6 +48,8 @@ namespace eCommerceApp.Infrastructure.Middleware
                 }
                 else
                 {
+                    logger.LogError(ex, "Related EFCore exception");
+
                     context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                     await context.Response.WriteAsync("An error occurred while saving the entity changes");
                 }
@@ -50,6 +57,9 @@ namespace eCommerceApp.Infrastructure.Middleware
             }
             catch (Exception ex)
             {
+                var logger = context.RequestServices.GetRequiredService<IApplogger<ExceptionHandlingMiddleware>>();
+                logger.LogError(ex, "Unnknown exception");
+                context.Response.ContentType = "application/json";
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 await context.Response.WriteAsync("An error occurred:" + ex.Message);
             }

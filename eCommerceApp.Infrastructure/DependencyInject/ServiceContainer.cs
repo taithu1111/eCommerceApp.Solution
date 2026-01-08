@@ -1,7 +1,9 @@
-﻿using eCommerceApp.Domain.Entities;
+﻿using eCommerceApp.Application.Services.Interfaces.Logging;
+using eCommerceApp.Domain.Entities;
 using eCommerceApp.Domain.Interfaces;
 using eCommerceApp.Infrastructure.Data;
 using eCommerceApp.Infrastructure.Repositories;
+using eCommerceApp.Infrastructure.Service;
 using EntityFramework.Exceptions.MySQL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +35,7 @@ namespace eCommerceApp.Infrastructure.DependencyInject
 
             services.AddScoped<IGeneric<Product>, GenericRepository<Product>>();
             services.AddScoped<IGeneric<Category>, GenericRepository<Category>>();
+            services.AddScoped(typeof(IApplogger<>), typeof(SeriLogLoggerAdapter<>));
             return services;
         }
 
