@@ -1,6 +1,7 @@
 using eCommerceApp.Infrastructure.DependencyInject;
 using eCommerceApp.Application.DependencyInject;
 using Serilog;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,10 +21,20 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
+builder.Services.AddCors(builder =>
+{
+    builder.AddDefaultPolicy(options =>
+    {
+        options.AllowAnyHeader()
+               .AllowAnyOrigin()
+               .AllowCredentials();
+    });
+});
 
 try
 {
     var app = builder.Build();
+    app.UseCors();
     app.UseSerilogRequestLogging();
 
     // Configure the HTTP request pipeline.
@@ -37,7 +48,7 @@ try
 
     app.UseAuthorization();
 
-    app.MapControllers();
+    app.MapControllers();   
     Log.Logger.Information("Application is running....");
     app.Run();
 }catch (Exception ex)
