@@ -8,13 +8,13 @@ using System.Security.Claims;
 namespace eCommerceApp.Infrastructure.Repositories.Authentication
 {
     public class UserManagement
-        (IRoleManagement roleManagement, UserManager<AppUser> userManager, AppDbContext context)
-        : IUserManagement
+        (IRoleManagement roleManagement, UserManager<AppUser> userManager,
+        AppDbContext context) : IUserManagement
     {
         public async Task<bool> CreateUser(AppUser user)
         {
             AppUser? _user = await GetUserByEmail(user.Email!);
-            if (user != null) return false;
+            if (_user != null) return false;
 
             return (await userManager.CreateAsync(user!, user!.PasswordHash!)).Succeeded;
         }

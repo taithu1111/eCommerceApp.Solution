@@ -3,6 +3,7 @@ using eCommerceApp.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -43,7 +44,8 @@ namespace eCommerceApp.Infrastructure.Repositories.Authentication
             {
                 rng.GetBytes(randomNumber);
             }
-                return Convert.ToBase64String(randomNumber);
+            string token = Convert.ToBase64String(randomNumber);
+            return WebUtility.UrlEncode(token);
         }
 
         public async Task<string> GetUserIdByRefreshToken(string refreshToken)
