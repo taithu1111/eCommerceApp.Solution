@@ -3,9 +3,11 @@ using eCommerceApp.Domain.Entities;
 using eCommerceApp.Domain.Entities.Identtity;
 using eCommerceApp.Domain.Interfaces;
 using eCommerceApp.Domain.Interfaces.Authentication;
+using eCommerceApp.Domain.Interfaces.Cart;
 using eCommerceApp.Infrastructure.Data;
 using eCommerceApp.Infrastructure.Repositories;
 using eCommerceApp.Infrastructure.Repositories.Authentication;
+using eCommerceApp.Infrastructure.Repositories.Cart;
 using eCommerceApp.Infrastructure.Service;
 using EntityFramework.Exceptions.MySQL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -82,6 +84,7 @@ namespace eCommerceApp.Infrastructure.DependencyInject
             services.AddScoped<IUserManagement, UserManagement>();
             services.AddScoped<IRoleManagement, RoleManagement>();
             services.AddScoped<ITokenManagement, TokenManagement>();
+            services.AddScoped<IPaymentMethod, PaymentMethodRepository>();
 
             return services;
         }

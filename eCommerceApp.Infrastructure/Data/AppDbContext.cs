@@ -21,6 +21,14 @@ namespace eCommerceApp.Infrastructure.Data
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<PaymentMethod>()
+                .HasData(
+                    new PaymentMethod
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "Credit Card",
+                    });
+
             builder.Entity<IdentityRole>()
                 .HasData(
                     new IdentityRole
