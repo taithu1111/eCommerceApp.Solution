@@ -1,4 +1,5 @@
-﻿using eCommerceApp.Application.Services.Interfaces.Logging;
+﻿using eCommerceApp.Application.Services.Interfaces.Cart;
+using eCommerceApp.Application.Services.Interfaces.Logging;
 using eCommerceApp.Domain.Entities;
 using eCommerceApp.Domain.Entities.Identtity;
 using eCommerceApp.Domain.Interfaces;
@@ -85,6 +86,7 @@ namespace eCommerceApp.Infrastructure.DependencyInject
             services.AddScoped<IRoleManagement, RoleManagement>();
             services.AddScoped<ITokenManagement, TokenManagement>();
             services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
+            services.AddScoped<IPaymentService, StripePaymentService>();
 
             return services;
         }
