@@ -5,7 +5,7 @@ using eCommerceApp.Domain.Interfaces.Cart;
 
 namespace eCommerceApp.Application.Services.Implementations.Cart
 {
-    public class PaymentMethodService(IPaymentMethod paymentMethod, IMapper mapper)
+    public class PaymentMethodService(IPaymentMethodRepository paymentMethod, IMapper mapper)
         : IPaymentMethodService
     {
         public async Task<IEnumerable<GetPaymentMethod>> GetPaymentMethods()

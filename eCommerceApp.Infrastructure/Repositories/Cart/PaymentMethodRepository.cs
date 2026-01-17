@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace eCommerceApp.Infrastructure.Repositories.Cart
 {
-    public class PaymentMethodRepository(AppDbContext context) : IPaymentMethod
+    public class PaymentMethodRepository(AppDbContext context) : IPaymentMethodRepository
     {
         public async Task<IEnumerable<PaymentMethod>> GetPaymentMethods()
         {
